@@ -1,13 +1,77 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/base}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Form Đăng Ký Mượn</title>
 </head>
 <body>
+<div layout:fragment="content">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow border">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Đăng Ký Mượn: <span th:text="${equipment.name}"></span></h2>
 
+        <form th:action="@{/student/borrow/{id}(id=${equipment.id})}" th:object="${borrowRequestDTO}" method="post">
+
+            <!-- Global Errors for DateCollision -->
+            <div th:if="${#fields.hasGlobalErrors()}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">
+                <ul>
+                    <li th:each="err : ${#fields.globalErrors()}" th:text="${err}">Global Error</li>
+                </ul>
+            </div>
+
+            <input type="hidden" th:field="*{equipmentId}" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Họ và tên sinh viên</label>
+                    <input type="text" th:field="*{studentName}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                    <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('studentName')}" th:errors="*{studentName}"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Mã sinh viên</label>
+                    <input type="text" th:field="*{studentId}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                    <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('studentId')}" th:errors="*{studentId}"></p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Email liên hệ</label>
+                <input type="email" th:field="*{email}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Số lượng sinh viên mượn</label>
+                <input type="number" th:field="*{quantity}" min="1" th:readonly="${equipment.type == 'LAB'}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-gray-50" />
+                <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></p>
+                <p class="text-gray-400 text-xs mt-1" th:if="${equipment.type == 'LAB'}">Mặc định là 1 khi mượn phòng Lab.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày dự kiến nhận (Tương lai)</label>
+                    <input type="date" th:field="*{borrowDate}" th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                    <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('borrowDate')}" th:errors="*{borrowDate}"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày dự kiến trả</label>
+                    <input type="date" th:field="*{returnDate}" th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm" />
+                    <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('returnDate')}" th:errors="*{returnDate}"></p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700">Lý do mượn</label>
+                <textarea th:field="*{reason}" rows="3" class="mt-1 p-2 w-full border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"></textarea>
+                <p class="text-red-500 text-xs mt-1" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></p>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <a th:href="@{/student/catalog}" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100 text-sm font-medium">Hủy</a>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium shadow">Xác nhận đăng ký</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
