@@ -1,13 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-
-</body>
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header">
+    <nav class="bg-blue-600 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a th:href="@{/student/catalog}" class="text-white font-bold text-xl">Hệ Thống Mượn Thiết Bị IT</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a th:href="@{/student/catalog}" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-sm font-medium">Trang Sinh Viên</a>
+                        <a th:href="@{/admin/request-list}" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-sm font-medium">Trang Quản Lý</a>
+                        <a th:if="${session.adminLoggedIn}" th:href="@{/admin/logout}" class="text-white bg-red-500 hover:bg-red-600 px-3 py-2 rounded-md text-sm font-medium ml-4">Thoát (Admin)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
 </html>
